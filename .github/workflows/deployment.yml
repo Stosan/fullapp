@@ -10,6 +10,7 @@ env:
     PORT: ${{ secrets.PORT}}
     GCP_HOST: ${{ secrets.GCP_HOST}}
     GCP_USER: ${{ secrets.GCP_USER}}
+    Project_dir: 'fullapp'
 
 jobs:
     tests:
@@ -53,4 +54,19 @@ jobs:
                     ssh ${{ env.GCP_USER }}@${{ env.GCP_HOST }}  << 'EOF'
                         set -e
                         echo "🚀 Starting deployment version"
+                        if [ ! -d "${{ env.Project_dir }}" ]; then
+                            echo "Project directory for ${{env.Project_dir}} does not exist"
+                        fi
+
+                        sudo apt install python3-setuptools
+
+                        cd ${{env.Project_dir}}
+                        git pull
+                        if [ ! -f .env ]; then
+                            echo ".env file does not exist"
+                            rm .env
+                        fi
+                        echo "PORT=${{env.PORT}}" >> .env
+                        poetry install --no-root
+                        uvicorn src.application.main:app --host 0.0.0.0
                     EOF
