@@ -7,6 +7,10 @@ on:
 
 env:
     PYTHON_VERSION: "3.12"
+    PORT: ${{ secrets.PORT}}
+    GCP_HOST: ${{ secrets.GCP_HOST}}
+    GCP_USER: ${{ secrets.GCP_USER}}
+
 jobs:
     tests:
         name: Run Tests
@@ -32,3 +36,20 @@ jobs:
         runs-on: ubuntu-latest
         needs: tests
         environment: production
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Install SSH key
+              uses: webfactory/ssh-agent@v0.9.0
+              with:
+                  ssh-private-key: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
+            - name: Add known hosts
+              run: |
+                  mkdir -p ~/.ssh
+                  ssh-keyscan-H ${{ env.GCP_HOST }} >> ~/.ssh/known_hosts
+            - name: Deploy to GCP VM
+              run: |
+                  ssh ${{ env.GCP_USER }}@${{ env.GCP_HOST }}  << 'EOF'
+                  set -e
+                  echo "🚀 Starting deployment version"
