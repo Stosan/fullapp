@@ -3,7 +3,7 @@ from fastapi import FastAPI, status, Depends
 from fastapi.security import HTTPBasic
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-
+from src.application.routes import prediction_route
 from src.config.appconfig import env_config
 
 # Get application settings from the settings module
@@ -57,6 +57,9 @@ def index():
 def health():
     return "healthy"
 
+
+
+app.include_router(prediction_route,prefix=settings.API_V1_STR)
 
 if __name__ == "__main__":
     # Retrieve environment variables for host, port, and timeout
