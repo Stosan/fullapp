@@ -23,6 +23,6 @@ jobs:
 
             - name: Install dependencies
               run: |
-                  pip install poetry pytest
+                  pip install poetry pytest pydantic
                   poetry install --no-root
                   PYTHONPATH=. pytest -v
