@@ -26,3 +26,9 @@ jobs:
                   pip install poetry pytest pydantic
                   poetry install --no-root
                   PYTHONPATH=. pytest -v
+
+    deploy:
+        name: Deploy to GCP VM
+        runs-on: ubuntu-latest
+        needs: tests
+        environment: production
