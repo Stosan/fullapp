@@ -50,6 +50,7 @@ jobs:
                   ssh-keyscan -H ${{ env.GCP_HOST }} >> ~/.ssh/known_hosts
             - name: Deploy to GCP VM
               run: |
-                  ssh ${{ env.GCP_USER }}@${{ env.GCP_HOST }}  << 'EOF'
-                  set -e
-                  echo "🚀 Starting deployment version"
+                    ssh ${{ env.GCP_USER }}@${{ env.GCP_HOST }}  << 'EOF'
+                        set -e
+                        echo "🚀 Starting deployment version"
+                    EOF
